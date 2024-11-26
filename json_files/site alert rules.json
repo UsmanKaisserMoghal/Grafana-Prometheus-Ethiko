@@ -1,0 +1,174 @@
+{
+    "apiVersion": 1,
+    "groups": [
+      {
+        "orgId": 1,
+        "name": "Site",
+        "folder": "Alerts",
+        "interval": "1m",
+        "rules": [
+          {
+            "uid": "xxxx-xxxx-xxxx-xxxx",  // Obfuscated UID
+            "title": "Sites Down",  // Alert title for sites being down
+            "condition": "B",  // Condition for triggering alert (B means based on threshold)
+            "data": [
+              {
+                "refId": "A",
+                "relativeTimeRange": {
+                  "from": 600,
+                  "to": 0
+                },
+                "datasourceUid": "xxxx-xxxx-xxxx-xxxx",  // Obfuscated UID for Prometheus datasource
+                "model": {
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "xxxx-xxxx-xxxx-xxxx"  // Obfuscated UID
+                  },
+                  "disableTextWrap": false,
+                  "editorMode": "builder",
+                  "expr": "probe_success",  // Prometheus expression to check if probe is successful
+                  "fullMetaSearch": false,
+                  "includeNullMetadata": true,
+                  "instant": true,
+                  "intervalMs": 1000,
+                  "legendFormat": "{{instance}}",  // Display instance name in legend
+                  "maxDataPoints": 43200,
+                  "range": false,
+                  "refId": "A",
+                  "useBackend": false
+                }
+              },
+              {
+                "refId": "B",
+                "relativeTimeRange": {
+                  "from": 600,
+                  "to": 0
+                },
+                "datasourceUid": "__expr__",  // Expression-based datasource
+                "model": {
+                  "conditions": [
+                    {
+                      "evaluator": {
+                        "params": [1],
+                        "type": "lt"  // Less than evaluator for the condition
+                      },
+                      "operator": {
+                        "type": "and"
+                      },
+                      "query": {
+                        "params": ["C"]
+                      },
+                      "reducer": {
+                        "params": [],
+                        "type": "last"  // Using the last value for the evaluation
+                      },
+                      "type": "query"
+                    }
+                  ],
+                  "datasource": {
+                    "type": "__expr__",
+                    "uid": "__expr__"
+                  },
+                  "expression": "A",  // Referencing the expression defined in refId A
+                  "intervalMs": 1000,
+                  "maxDataPoints": 43200,
+                  "refId": "B",
+                  "type": "threshold"  // Threshold-based alert
+                }
+              }
+            ],
+            "dasboardUid": "xxxx-xxxx-xxxx-xxxx",  // Obfuscated dashboard UID
+            "panelId": 8,
+            "noDataState": "NoData",  // Action when no data is found
+            "execErrState": "Error",  // Action when execution encounters an error
+            "for": "1m",  // Alert will be triggered if condition persists for 1 minute
+            "annotations": {
+              "__dashboardUid__": "xxxx-xxxx-xxxx-xxxx",  // Obfuscated dashboard UID
+              "__panelId__": "8"
+            },
+            "labels": {},
+            "isPaused": false
+          },
+          {
+            "uid": "xxxx-xxxx-xxxx-xxxx",  // Obfuscated UID
+            "title": "High Latency Sites",  // Alert title for high latency sites
+            "condition": "C",  // Condition based on latency (C means threshold)
+            "data": [
+              {
+                "refId": "A",
+                "relativeTimeRange": {
+                  "from": 600,
+                  "to": 0
+                },
+                "datasourceUid": "xxxx-xxxx-xxxx-xxxx",  // Obfuscated UID for Prometheus datasource
+                "model": {
+                  "disableTextWrap": false,
+                  "editorMode": "builder",
+                  "expr": "rate(probe_duration_seconds[5m])",  // Prometheus expression for latency rate
+                  "fullMetaSearch": false,
+                  "includeNullMetadata": true,
+                  "instant": true,
+                  "intervalMs": 1000,
+                  "legendFormat": "__auto",
+                  "maxDataPoints": 43200,
+                  "range": false,
+                  "refId": "A",
+                  "useBackend": false
+                }
+              },
+              {
+                "refId": "C",
+                "relativeTimeRange": {
+                  "from": 600,
+                  "to": 0
+                },
+                "datasourceUid": "__expr__",  // Expression-based datasource
+                "model": {
+                  "conditions": [
+                    {
+                      "evaluator": {
+                        "params": [0.01],
+                        "type": "gt"  // Greater than evaluator for the condition
+                      },
+                      "operator": {
+                        "type": "and"
+                      },
+                      "query": {
+                        "params": ["C"]
+                      },
+                      "reducer": {
+                        "params": [],
+                        "type": "last"  // Using the last value for the evaluation
+                      },
+                      "type": "query"
+                    }
+                  ],
+                  "datasource": {
+                    "type": "__expr__",
+                    "uid": "__expr__"
+                  },
+                  "expression": "A",  // Referencing the expression defined in refId A
+                  "intervalMs": 1000,
+                  "maxDataPoints": 43200,
+                  "refId": "C",
+                  "type": "threshold"  // Threshold-based alert
+                }
+              }
+            ],
+            "dasboardUid": "xxxx-xxxx-xxxx-xxxx",  // Obfuscated dashboard UID
+            "panelId": 8,
+            "noDataState": "NoData",  // Action when no data is found
+            "execErrState": "Error",  // Action when execution encounters an error
+            "for": "5m",  // Alert will be triggered if condition persists for 5 minutes
+            "annotations": {
+              "__dashboardUid__": "xxxx-xxxx-xxxx-xxxx",  // Obfuscated dashboard UID
+              "__panelId__": "8"
+            },
+            "labels": {},
+            "isPaused": false
+          }
+        ]
+      }
+    ]
+  }
+  

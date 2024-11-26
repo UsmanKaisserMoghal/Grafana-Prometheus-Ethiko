@@ -1,0 +1,229 @@
+{
+    // Dashboard annotations: Defines alerts and annotations for the dashboard
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1, // Built-in annotation
+          "datasource": {
+            "type": "grafana", // Data source type (Grafana)
+            "uid": "xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx" // Obfuscated UID for the data source
+          },
+          "enable": true, // Enable the annotation
+          "hide": true, // Hide by default
+          "iconColor": "rgba(0, 211, 255, 1)", // Color of the annotation icon
+          "name": "Annotations & Alerts", // Name of the annotation
+          "type": "dashboard" // Type of annotation
+        }
+      ]
+    },
+  
+    // Dashboard metadata
+    "editable": true, // Indicates if the dashboard is editable
+    "fiscalYearStartMonth": 0, // Fiscal year starts in January
+    "graphTooltip": 0, // Tooltip setting for graphs
+    "id": 1, // Unique ID of the dashboard
+    "links": [], // Links associated with the dashboard (empty in this case)
+    "liveNow": false, // Live mode flag
+    "panels": [
+      {
+        // Panel 1: Total Hostings
+        "datasource": {
+          "type": "prometheus", // Data source type (Prometheus)
+          "uid": "xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx" // Obfuscated UID for Prometheus data source
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds" // Color based on thresholds
+            },
+            "links": [
+              {
+                "targetBlank": true, // Open link in new tab
+                "title": "View Sites for \"${__value.text}\" Hosting", // Dynamic title based on value
+                "url": "https://example.com/sites?orgId=1&var-hosting=${__value.text}" // Link to view associated sites, with dynamic parameter
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute", // Absolute threshold mode
+              "steps": [
+                {
+                  "color": "green", // Threshold color (green)
+                  "value": null // No specific value set, applies to all
+                }
+              ]
+            }
+          },
+          "overrides": [] // No field overrides in this configuration
+        },
+        "gridPos": {
+          "h": 5, // Height of the panel
+          "w": 3, // Width of the panel
+          "x": 0, // Horizontal position
+          "y": 0 // Vertical position
+        },
+        "id": 2, // Panel ID
+        "options": {
+          "colorMode": "value", // Color mode for value display
+          "graphMode": "area", // Graph mode (area chart)
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull" // Calculation method for reducing data (last non-null)
+            ]
+          },
+          "wideLayout": true // Enable wide layout for the panel
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus", // Data source type (Prometheus)
+              "uid": "xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx" // Obfuscated UID for Prometheus
+            },
+            "expr": "probe_success", // Metric expression to fetch data
+            "legendFormat": "{{job}}", // Format for legend
+            "refId": "A" // Reference ID for this query
+          }
+        ],
+        "title": "Total Hostings", // Title of the panel
+        "transformations": [
+          {
+            "id": "joinByLabels", // Transformation: Join by labels
+            "options": {
+              "value": "__name__" // Field to join by (metric name)
+            }
+          },
+          {
+            "id": "groupBy", // Transformation: Group by labels
+            "options": {
+              "fields": {
+                "instance": {
+                  "aggregations": [
+                    "distinctCount" // Aggregation method: distinct count for 'instance'
+                  ],
+                  "operation": "aggregate" // Operation: aggregate data
+                },
+                "job": {
+                  "operation": "groupby" // Group by 'job'
+                },
+                "probe_success": {
+                  "aggregations": [
+                    "lastNotNull" // Aggregation method: last non-null for 'probe_success'
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "organize", // Transformation: Organize and rename fields
+            "options": {
+              "indexByName": {
+                "instance": 1, // Field mapping for 'instance'
+                "job": 0, // Field mapping for 'job'
+                "probe_success (lastNotNull)": 2 // Field mapping for 'probe_success'
+              },
+              "renameByName": {
+                "instance (distinctCount)": "Sites", // Rename 'instance' field to 'Sites'
+                "job": "Hostings", // Rename 'job' field to 'Hostings'
+                "probe_success (lastNotNull) (sum)": "Sites Up" // Rename 'probe_success' field to 'Sites Up'
+              }
+            }
+          }
+        ],
+        "type": "stat" // Panel type (stat panel)
+      },
+      {
+        // Panel 2: Total Sites
+        "datasource": {
+          "type": "datasource", // Data source type (generic)
+          "uid": "-- Dashboard --" // Placeholder for data source UID
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds" // Color based on thresholds
+            },
+            "thresholds": {
+              "mode": "absolute", // Absolute threshold mode
+              "steps": [
+                {
+                  "color": "green", // Threshold color (green)
+                  "value": null // No specific value set
+                }
+              ]
+            }
+          },
+          "overrides": [] // No field overrides in this panel
+        },
+        "gridPos": {
+          "h": 5, // Height of the panel
+          "w": 3, // Width of the panel
+          "x": 3, // Horizontal position
+          "y": 0 // Vertical position
+        },
+        "id": 3, // Panel ID
+        "options": {
+          "colorMode": "value", // Color mode for value display
+          "reduceOptions": {
+            "calcs": [
+              "lastNotNull" // Calculation method for reducing data (last non-null)
+            ]
+          }
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "datasource", // Data source type (generic)
+              "uid": "-- Dashboard --" // Placeholder for data source UID
+            },
+            "panelId": 2, // Reference to the previous panel (ID 2)
+            "refId": "A" // Reference ID for this query
+          }
+        ],
+        "title": "Total Sites", // Title of the panel
+        "transformations": [
+          {
+            "id": "groupBy", // Transformation: Group by labels
+            "options": {
+              "fields": {
+                "instance": {
+                  "aggregations": [
+                    "distinctCount" // Aggregation method: distinct count for 'instance'
+                  ],
+                  "operation": "aggregate" // Operation: aggregate data
+                },
+                "job": {
+                  "operation": "groupby" // Group by 'job'
+                }
+              }
+            }
+          },
+          {
+            "id": "calculateField", // Transformation: Calculate aggregated field
+            "options": {
+              "mode": "reduceRow", // Mode to reduce rows
+              "reduce": {
+                "reducer": "sum" // Use 'sum' to calculate the total
+              },
+              "replaceFields": true // Replace existing fields with the calculated ones
+            }
+          }
+        ],
+        "type": "stat" // Panel type (stat panel)
+      }
+    ],
+  
+    // Global settings
+    "refresh": "", // Refresh interval (empty, not set)
+    "schemaVersion": 39, // Schema version
+    "templating": {
+      "list": [] // No templating variables in this configuration
+    },
+    "time": {
+      "from": "now-6h", // Time range: last 6 hours
+      "to": "now" // Time range: up to the current time
+    },
+    "timezone": "", // No specific timezone set
+    "title": "Hostings", // Dashboard title
+    "uid": "xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx", // Obfuscated UID for the dashboard
+    "version": 63 // Version of the dashboard
+  }
+  

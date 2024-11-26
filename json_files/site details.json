@@ -1,0 +1,297 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": {
+            "type": "grafana",
+            "uid": "-- UID --" // UID hidden for security
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 4,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+      {
+        "datasource": {
+          "type": "datasource",
+          "uid": "-- UID --" // UID hidden for security
+        },
+        "description": "",
+        "gridPos": {
+          "h": 5,
+          "w": 5,
+          "x": 0,
+          "y": 0
+        },
+        "id": 3,
+        "options": {
+          "code": {
+            "language": "html",
+            "showLineNumbers": false,
+            "showMiniMap": false
+          },
+          "content": "<h1>${hosting}</h1>",
+          "mode": "html"
+        },
+        "pluginVersion": "10.3.3",
+        "targets": [
+          {
+            "datasource": {
+              "type": "datasource",
+              "uid": "-- UID --" // UID hidden for security
+            },
+            "panelId": 2,
+            "refId": "A"
+          }
+        ],
+        "title": "Hosting",
+        "transformations": [
+          {
+            "id": "joinByLabels",
+            "options": {
+              "value": "__name__"
+            }
+          },
+          {
+            "id": "groupBy",
+            "options": {
+              "fields": {
+                "instance": {
+                  "aggregations": [
+                    "distinctCount"
+                  ],
+                  "operation": "groupby"
+                },
+                "job": {
+                  "aggregations": []
+                },
+                "probe_success": {
+                  "aggregations": [
+                    "lastNotNull"
+                  ],
+                  "operation": "aggregate"
+                }
+              }
+            }
+          },
+          {
+            "id": "rowsToFields",
+            "options": {}
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "mode": "reduceRow",
+              "reduce": {
+                "reducer": "sum"
+              },
+              "replaceFields": true
+            }
+          }
+        ],
+        "type": "text"
+      },
+      {
+        "datasource": {
+          "type": "prometheus",
+          "uid": "-- UID --" // UID hidden for security
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisBorderShow": false,
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 0,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "insertNulls": false,
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "line+area"
+              }
+            },
+            "mappings": [],
+            "min": 0,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 0.7
+                },
+                {
+                  "color": "red",
+                  "value": 6
+                }
+              ]
+            },
+            "unit": "s",
+            "unitScale": true
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 19,
+          "x": 5,
+          "y": 0
+        },
+        "id": 53,
+        "links": [],
+        "options": {
+          "legend": {
+            "calcs": [
+              "min",
+              "mean",
+              "max",
+              "lastNotNull"
+            ],
+            "displayMode": "table",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "pluginVersion": "10.3.3",
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "-- UID --" // UID hidden for security
+            },
+            "disableTextWrap": false,
+            "editorMode": "builder",
+            "expr": "sum by(instance) (probe_http_duration_seconds{phase!~\"processing\", job=~\"$hosting\"})",
+            "fullMetaSearch": false,
+            "includeNullMetadata": true,
+            "instant": false,
+            "legendFormat": "__auto",
+            "range": true,
+            "refId": "A",
+            "useBackend": false
+          }
+        ],
+        "title": "Latency of Sites in $hosting",
+        "type": "timeseries"
+      }
+    ],
+    "refresh": "",
+    "schemaVersion": 39,
+    "tags": [],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "Golfs",
+            "value": "Golfs"
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "-- UID --" // UID hidden for security
+          },
+          "definition": "label_values(probe_success,job)",
+          "hide": 0,
+          "includeAll": false,
+          "label": "Hosting",
+          "multi": false,
+          "name": "hosting",
+          "options": [],
+          "query": {
+            "qryType": 1,
+            "query": "label_values(probe_success,job)",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "current": {
+            "selected": true,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": {
+            "type": "prometheus",
+            "uid": "-- UID --" // UID hidden for security
+          },
+          "definition": "label_values(probe_success{job=\"$hosting\"},instance)",
+          "hide": 0,
+          "includeAll": true,
+          "label": "Target",
+          "multi": true,
+          "name": "site",
+          "options": [],
+          "query": {
+            "qryType": 1,
+            "query": "label_values(probe_success{job=\"$hosting\"},instance)",
+            "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 0,
+          "type": "query"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Sites Details",
+    "uid": "-- UID --", // UID hidden for security
+    "version": 22,
+    "weekStart": ""
+  }
+  
